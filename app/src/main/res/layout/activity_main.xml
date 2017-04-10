@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:id="@+id/contentRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#10000000"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="4dp"
+            android:paddingBottom="3dp"
+            >
+            <RelativeLayout
+                android:id="@+id/homeRl"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                >
+                <ImageView
+                    android:id="@+id/homeTabImg"
+                    android:layout_width="@dimen/tabSize"
+                    android:layout_height="@dimen/tabSize"
+                    android:src="@mipmap/comui_tab_home"
+                    android:layout_centerHorizontal="true"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="主页"
+                    android:textSize="13dp"
+                    android:textColor="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/messageRl"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/messageTabImg"
+                    android:layout_width="@dimen/tabSize"
+                    android:layout_height="@dimen/tabSize"
+                    android:src="@mipmap/comui_tab_message"
+                    android:layout_centerHorizontal="true"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="消息"
+                    android:textSize="13dp"
+                    android:textColor="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mineRl"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                >
+                <ImageView
+                    android:id="@+id/mineTabImg"
+                    android:layout_width="@dimen/tabSize"
+                    android:layout_height="@dimen/tabSize"
+                    android:src="@mipmap/comui_tab_person"
+                    android:layout_centerHorizontal="true"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我的"
+                    android:textSize="13dp"
+                    android:textColor="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
