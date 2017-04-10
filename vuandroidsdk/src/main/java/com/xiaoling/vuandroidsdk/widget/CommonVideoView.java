@@ -67,6 +67,7 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
     public int mScreenHeight;//播放器高度
 
     //status状态保护
+    public boolean isPrepared; //是否准备好了
     public boolean isRealPause;//是否真的暂停了
     public boolean isComplete;//是否完成
     private boolean mPlaying;//是否正在播放
@@ -79,8 +80,6 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
     private AdVideoPlayerListner mListner;//view中各种控件点击事件的回调及其他回调
     private ScreenEventReceiver mScreenReceiver;//锁屏事件监听
 
-    //ceshi
-    FileDescriptor fd;
 
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -97,6 +96,7 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
             }
         }
     };
+    private String tag = "CommonVideoView";
 
 
     public CommonVideoView(Context context, ViewGroup parentContainer) {
@@ -117,9 +117,6 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
         this.url = url;
     }
 
-    public void setFd(FileDescriptor fd) {
-        this.fd = fd;
-    }
 
     /**
      * 初始化数据
@@ -134,7 +131,29 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
      * 所有的点击事件在此设置
      */
     private void setAllClickListner() {
+        binding.videoPlayImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //如果满足条件（有网，视频在屏幕中显示处的区域超过本身的一半）则自动播放，否则暂停
+//            if (Utils.checkCanAutoPlay(getContext(), AdParameters.getCurrentSetting())
+//                    && Utils.getVisiblePercent(mParentConainer) > SDKConstant.VIDEO_SCREEN_PERCENT) {
+                resume();
+//            } else {
+//                pause();
+//            }
+            }
+        });
 
+        binding.videoTextureView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPlaying()) {
+                    pause();
+                } else {
+                    resume();
+                }
+            }
+        });
     }
 
     /**
@@ -169,12 +188,13 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
      */
     private MediaPlayer createMedia() {
         mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.reset();
         mMediaPlayer.setOnBufferingUpdateListener(this);
         mMediaPlayer.setOnInfoListener(this);
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnErrorListener(this);
         mMediaPlayer.setOnPreparedListener(this);
+
+        mMediaPlayer.reset();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         setPlayerState(STATE_IDLE);
         if (mSurFace != null && mSurFace.isValid()) {
@@ -200,6 +220,7 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
      * 加载MediaPlayer
      */
     public void load() {
+//        url = "http://weelinkqout.oss-cn-hangzhou.aliyuncs.com/Release/201704/10007/10007_1491792687989.mp4";
         if (getPlayerState() != STATE_IDLE) {
             return;
         }
@@ -210,15 +231,11 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
             if (!TextUtils.isEmpty(url)) {
                 mMediaPlayer.setDataSource(url);
             }
-            if (fd != null) {
-                mMediaPlayer.setDataSource(fd);
-            }
-
-//            mMediaPlayer.setDataSource(url);
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             stop();
         }
+        Log.d(tag, "load()");
     }
 
 
@@ -227,20 +244,22 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
      * 视频开始播放
      */
     private void resume() {
-        if (getPlayerState() != STATE_PAUSE) {//非暂停状态，那么就是可能正在播放，或者失败
-            return;
-        }
+        Log.d(tag, "走到resume()");
+//        if (getPlayerState() != STATE_PAUSE) {//非暂停状态，那么就是可能正在播放，或者失败
+//            return;
+//        }
         if (mMediaPlayer != null) {
             isRealPause = false;
             isComplete = false;
             mPlaying = true;
             setPlayerState(STATE_PLAYING);
             if (!isPlaying()) {
+                showPauseOrPlayView(false);
                 mMediaPlayer.start();
                 mHandler.sendEmptyMessage(TIME_MSG);
-                showPauseOrPlayView(true);
+                Log.d(tag, "开始播放");
             } else {
-                showPauseOrPlayView(false);
+                showPauseOrPlayView(true);
             }
         }
     }
@@ -350,21 +369,16 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
      */
     @Override
     public void onPrepared(MediaPlayer mp) {
+        Log.d(tag, "准备好了");
         mMediaPlayer = mp;
+        isPrepared = true;
+        showPauseOrPlayView(true);
         if (mMediaPlayer != null) {
             mMediaPlayer.setOnBufferingUpdateListener(this);//开始缓冲
             mCurrentCount = 0; //重连次数重置
             if (mListner != null) {
                 mListner.onVideoLoadSuccess();
             }
-
-            //如果满足条件（有网，视频在屏幕中显示处的区域超过本身的一半）则自动播放，否则暂停
-//            if (Utils.checkCanAutoPlay(getContext(), AdParameters.getCurrentSetting())
-//                    && Utils.getVisiblePercent(mParentConainer) > SDKConstant.VIDEO_SCREEN_PERCENT) {
-                resume();
-//            } else {
-//                pause();
-//            }
         }
     }
 
@@ -453,7 +467,6 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         mSurFace = new Surface(surface);
         createMedia();
-        mMediaPlayer.setSurface(mSurFace);
         load();
     }
 
@@ -571,6 +584,7 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
      * 显示正在加载的页面
      */
     private void showLoadingView() {
+        binding.videoLoadingImg.setVisibility(View.VISIBLE);
         AnimationDrawable anim = (AnimationDrawable) binding.videoLoadingImg.getBackground();
         anim.start();
     }
@@ -581,11 +595,9 @@ public class CommonVideoView extends RelativeLayout implements View.OnClickListe
      */
     private void showPauseOrPlayView(boolean isPauseView) {
         binding.videoErroImg.setVisibility(View.GONE);
-        if (!isPauseView) {
-           binding.videoLoadingImg.clearAnimation();//正在播放视频时停止加载动画
-        }
-        binding.videoLoadingImg.setVisibility(isPauseView ? View.VISIBLE : View.GONE);
-        binding.videoPlayImg.setVisibility(isPauseView ? View.GONE : View.VISIBLE);
+        binding.videoLoadingImg.clearAnimation();//正在播放视频时停止加载动画
+        binding.videoLoadingImg.setVisibility(View.GONE);
+        binding.videoPlayImg.setVisibility(isPauseView ? View.VISIBLE : View.GONE);
     }
 
     /**

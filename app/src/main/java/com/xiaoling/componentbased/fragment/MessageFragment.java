@@ -36,15 +36,9 @@ public class MessageFragment extends BaseFragment {
     }
 
     private void initData() {
+        String url = "http://weelinkqout.oss-cn-hangzhou.aliyuncs.com/Release/201704/10007/10007_1491792687989.mp4";
         CommonVideoView videoView = new CommonVideoView(getActivity(),binding.testVideo);
-        try {
-            AssetFileDescriptor fd = getContext().getAssets().openFd("cat.mp4");
-            videoView.setFd(fd.getFileDescriptor());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        videoView.setDataResourse("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4");
+        videoView.setDataResourse(url);
 
         binding.testVideo.addView(videoView);
         videoView.setmListner(new CommonVideoView.AdVideoPlayerListner() {
@@ -75,7 +69,7 @@ public class MessageFragment extends BaseFragment {
 
             @Override
             public void onVideoLoadfail() {
-                Utils.showToast(getContext(),"视频加载失败");
+
             }
 
             @Override
@@ -88,7 +82,6 @@ public class MessageFragment extends BaseFragment {
 
             }
         });
-
     }
 
     @Override

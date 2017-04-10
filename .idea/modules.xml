@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ComponentBased.iml" filepath="$PROJECT_DIR$/ComponentBased.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ComponentBasedDevelopment.iml" filepath="$PROJECT_DIR$/ComponentBasedDevelopment.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/vuandroidsdk/vuandroidsdk.iml" filepath="$PROJECT_DIR$/vuandroidsdk/vuandroidsdk.iml" />
     </modules>
