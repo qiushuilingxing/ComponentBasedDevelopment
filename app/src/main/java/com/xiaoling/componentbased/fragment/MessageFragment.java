@@ -36,7 +36,7 @@ public class MessageFragment extends BaseFragment {
     }
 
     private void initData() {
-        String url = "http://weelinkqout.oss-cn-hangzhou.aliyuncs.com/Release/201704/10007/10007_1491792687989.mp4";
+        String url = "http://weelinkqout.oss-cn-hangzhou.aliyuncs.com/Release/201704/10007/10007_1491817465553.mp4";
         CommonVideoView videoView = new CommonVideoView(getActivity(),binding.testVideo);
         videoView.setDataResourse(url);
 
