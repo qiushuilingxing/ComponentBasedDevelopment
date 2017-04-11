@@ -6,9 +6,14 @@ package com.xiaoling.vuandroidsdk.constant;
  */
 
 public class SDKConstant {
-    //自动播放阈值
+    /**
+     * 自动播放阈值: 视频控件在屏幕中显示超过50%
+     */
     public static int VIDEO_SCREEN_PERCENT = 50;
 
+    /**
+     * 屏幕宽高比
+     */
     public static float VIDEO_HEIGHT_PERCENT = 9 / 16.0f;
 
     /**

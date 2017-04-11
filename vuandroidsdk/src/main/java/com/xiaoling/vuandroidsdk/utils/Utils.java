@@ -16,7 +16,7 @@ public class Utils {
 
 
     /**
-     * 检查是否可以自动播放
+     * 检查是否可以自动播放, 这取决于用户对视频播放的设置
      * @param context
      * @param setting
      * @return
